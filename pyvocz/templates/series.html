@@ -19,6 +19,7 @@
         </div>
     </div>
 
+    {% if series.events %}
         {% set event = series.events[0] %}
 
         {% if event.venue %}
@@ -30,6 +31,7 @@
             >
             </div>
         {% endif %}
+    {% endif %}
 
     <div class="row">
         <div class="export-links col-lg-12">
@@ -46,6 +48,7 @@
 
     {% if year==None %}
         <div id="featured-meetup">
+            {% if series.events %}
                 {% if event.date < today %}
                      <h2>{{ tr('Poslední sraz', 'Last Meetup') }}</h2>
                 {% elif event.date > today %}
@@ -56,6 +59,7 @@
 
                 {% set is_header_event = True %}
                 {% include "fragments/event.html" %}
+            {% endif %}
         </div>
 
         {% if series.recurrence_rule %}
@@ -138,12 +142,16 @@
         {% endmacro %}
         {{ pagination() }}
         <ul>
+            {% if series.events %}
                 {% for event in series.events[1 if year==None else 0:] %}
                     <li>
                         {% set is_header_event = False %}
                         {% include "fragments/event.html" %}
                     </li>
                 {% endfor %}
+            {% else %}
+                {{ tr("Žádné vyhovující srazy nenalezeny.", "No fitting events found.") }}
+            {% endif %}
         </ul>
         {{ pagination() }}
     </div>
